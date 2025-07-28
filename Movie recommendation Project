@@ -1,0 +1,51 @@
+import numpy as np
+import pandas as pd
+from sklearn.feature_extraction import text
+from sklearn.metrics.pairwise import cosine_similarity
+netflix_df = pd.read_csv("netflixData.csv")
+#print(netflix_df.head())
+netflix_df.info()
+#print(netflix_df.isnull())
+#print(netflix_df.isnull().sum())
+required_nf_df = netflix_df[["Title","Description","Content Type","Genres"]]
+required_nf_df.head()
+#drop 
+required_nf_df.dropna()
+required_nf_df.count()
+#clean yhe data
+import nltk
+nltk.download('stopwords')
+stemmer = nltk.SnowballStemmer("english")
+from nltk.corpus import stopwords
+import string
+stopword = set(stopwords.words('english'))
+#clean the data
+import re
+def clean(text):
+    text = str(text).lower()
+    text = re.sub('\[.*?\]', '', text)
+    text = re.sub('https?://\S+|www\.\S+', '', text)
+    text = re.sub('<.*?>+', '', text)
+    text = re.sub('[%s]' % re.escape(string.punctuation), '', text)
+    text = re.sub('\n', '', text)
+    text = re.sub('\w*\d\w*', '', text)
+    text = [word for word in text.split(' ') if word not in stopword]
+    text=" ".join(text)
+    text = [stemmer.stem(word) for word in text.split(' ')]
+    text=" ".join(text)
+    return text
+required_nf_df["Title"] = required_nf_df['Title'].apply(clean)
+#print(required_nf_df.head())
+#print(required_nf_df.Title.sample(10))
+genrelist = required_nf_df["Genres"].tolist()
+tfidf = text.TfidfVectorizer(stop_words="english")
+tfidf_matrix = tfidf.fit_transform(genrelist)
+similarity = cosine_similarity(tfidf_matrix)
+indices = pd.Series(required_nf_df.index, index=required_nf_df['Title']).drop_duplicates()
+def netflix_recommendation(title,similarity=similarity):
+    index = indices[title]
+    similarity_scores = list(enumerate(similarity[index]))
+    similarity_scores = similarity_scores[0:10]
+    movieindices = [i[0] for i in similarity_scores]
+    return required_nf_df["Title"].iloc[movieindices]
+print(netflix_recommendation("fitoor"))
