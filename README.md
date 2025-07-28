@@ -1,40 +1,53 @@
-1. Load the Dataset
+# 🎬 Movie Recommendation System using Machine Learning
 
-3. Handle Missing Values
-Fill Age with median.
+This project implements a **content-based recommendation system** to suggest movies based on a user's input using **Natural Language Processing (NLP)** and **machine learning techniques**. The system is trained on Netflix movie/show data and returns similar titles based on genres.
 
-Fill Embarked with mode.
+---
 
-Drop Cabin due to excessive nulls.
+## 📌 Objective
 
-4. Drop Irrelevant Columns
-Remove Name and Ticket which are not useful for modeling.
+To build a **Movie Recommendation System** that helps users discover movies similar in genre and content to their favorite ones. It uses **TF-IDF vectorization** and **cosine similarity** to recommend relevant titles.
 
-5. Encode Categorical Variables
-Convert Sex to numerical (0 for male, 1 for female).
+---
 
-One-hot encode Embarked.
+## 🗂️ Dataset
 
-6. Normalize Numerical Features
-Standardize Age and Fare using StandardScaler.
+The dataset used is `netflixData.csv`, which contains:
+- `Title`: Name of the movie or show
+- `Description`: Short synopsis
+- `Content Type`: Movie or TV Show
+- `Genres`: List of genres
 
-7. Export the Cleaned Dataset
+---
 
+## ⚙️ How It Works
 
+1. **Data Preprocessing**  
+   - Selected key columns
+   - Removed null values
+   - Cleaned text (lowercasing, stopword removal, stemming, punctuation removal)
 
+2. **Feature Extraction**  
+   - Applied **TF-IDF Vectorization** on genres
 
+3. **Similarity Computation**  
+   - Used **cosine similarity** to calculate similarity scores between movies
 
-Skills Demonstrated:-
-Data Preprocessing
+4. **Recommendation Function**  
+   - `netflix_recommendation(title)` returns the top 10 most similar movie titles
 
-Handling Missing Values
+---
 
-Feature Encoding
+## 📁 Files Included
 
-Data Normalization
+- `project 2.py` – Python implementation of the recommendation system
+- `netflixData.csv` – Dataset used for training and recommendations
+- `Movie_Recommendation_System_Report.pdf` – Detailed project report
+- `README.md` – This file
 
-Python Scripting
+---
 
-Use of pandas, numpy, scikit-learn, seaborn
+## ▶️ Example Usage
 
-
+```python
+print(netflix_recommendation("fitoor"))
